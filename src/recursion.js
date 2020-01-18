@@ -67,14 +67,23 @@ var exponent = function(base, exp) {
 // powerOfTwo(16); // true
 // powerOfTwo(10); // false
 var powerOfTwo = function(n) {
+	if (!Number.isInteger(n)) {
+		return false;
+	}
+	return n === 0 ? false : (n === 1 ? true : true && powerOfTwo(n / 2));
 };
 
 // 9. Write a function that reverses a string.
 var reverse = function(string) {
+	let len = string.length;
+	return len === 1 || len === 0 ? string : string[len - 1] + reverse(string.slice(0, len - 1))
 };
 
 // 10. Write a function that determines if a string is a palindrome.
 var palindrome = function(string) {
+	let str = string.split(' ').join('').toLowerCase();
+	let len = str.length;
+	return len === 1 || len === 0 ? true : str[0] === str[len - 1] && palindrome(str.slice(1, len - 1));
 };
 
 // 11. Write a function that returns the remainder of x divided by y without using the
@@ -83,6 +92,10 @@ var palindrome = function(string) {
 // modulo(17,5) // 2
 // modulo(22,6) // 4
 var modulo = function(x, y) {
+	let absY = y < 0 ? -y : y;
+	let absX = x < 0 ? -x : x;
+	let nextX = (x ^ y) < 0 ? x + y : x - y;
+	return y === 0 ? NaN : (absX < absY ? x : modulo(nextX, y));
 };
 
 // 12. Write a function that multiplies two numbers without using the * operator or
