@@ -56,10 +56,10 @@ var exponent = function(base, exp) {
 	let nextExp = exp > 1 ? exp - 1 : exp + 1;
 	if (exp < 0) {
 		return 1 / (base * exponent(base, -nextExp));
-	} else if (exp === 1) {
-		return base;
+	} else if (exp === 2) {
+		return base * base;
 	}
-	return exp === 0 ? 1 : base * exponent(base, nextExp);
+	return exp === 0 ? 1 : (exp === 1 ? base : base * exponent(base, nextExp));
 };
 
 // 8. Determine if a number is a power of two.
