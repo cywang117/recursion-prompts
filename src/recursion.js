@@ -302,6 +302,9 @@ var flatten = function(array) {
 // 31. Given a string, return an object containing tallies of each letter.
 // letterTally('potato'); // {p:1, o:2, t:2, a:1}
 var letterTally = function(str, obj) {
+	obj ? 0 : obj = {};
+	if (str !== '') obj[str[0]] ? obj[str[0]] += 1 : obj[str[0]] = 1;
+	return str === '' ? obj : letterTally(str.slice(1), obj);
 };
 
 // 32. Eliminate consecutive duplicates in a list. If the list contains repeated
@@ -310,18 +313,30 @@ var letterTally = function(str, obj) {
 // compress([1,2,2,3,4,4,5,5,5]) // [1,2,3,4,5]
 // compress([1,2,2,3,4,4,2,5,5,5,4,4]) // [1,2,3,4,2,5,4]
 var compress = function(list) {
+	let containsAllSame = list.every(el => el === list[0]);
+	let firstDiff = list.findIndex(el => el !== list[0]);
+	return list.length === 0 ? [] : [list[0]].concat(compress(containsAllSame ? [] : list.slice(firstDiff)));
 };
 
 // 33. Augment every element in a list with a new value where each element is an array
 // itself.
 // augmentElements([[],[3],[7]], 5); // [[5],[3,5],[7,5]]
 var augmentElements = function(array, aug) {
+	let containsNonArrEls = false;
+	array.forEach(el => {
+		Array.isArray(el) ? augmentElements(el, aug) : containsNonArrEls = true;
+	});
+	containsNonArrEls === true || array.length === 0 ? array.push(aug) : 0;
+	return array;
 };
 
 // 34. Reduce a series of zeroes to a single 0.
 // minimizeZeroes([2,0,0,0,1,4]) // [2,0,1,4]
 // minimizeZeroes([2,0,0,0,1,0,0,4]) // [2,0,1,0,4]
 var minimizeZeroes = function(array) {
+	let nextIdx = 1;
+	if (array[0] === 0) nextIdx = array.findIndex(el => el !== 0);
+	return array.length === 0 ? [] : [array[0]].concat(minimizeZeroes(array.slice(nextIdx)));
 };
 
 // 35. Alternate the numbers in an array between positive and negative regardless of
