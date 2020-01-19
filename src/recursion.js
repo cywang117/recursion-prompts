@@ -384,12 +384,46 @@ var tagCount = function(tag, node) {
 // binarySearch(array, 5) // 5
 // https://www.khanacademy.org/computing/computer-science/algorithms/binary-search/a/binary-search
 var binarySearch = function(array, target, min, max) {
+	// optional test: invoke with only 2 arguments
+	if (typeof target !== 'object') target = { 't': target, 'min': 0, 'max': array.length - 1};
+	if (target.min >= target.max && target.t !== array[target.min]) return null;
+	let mid = Math.floor((target.max - target.min) / 2) + target.min;
+	if (array[mid] === target.t) return mid;
+	if (array[mid] < target.t) {
+		target.min = mid + 1;
+		return binarySearch(array, target);
+	}
+	if (array[mid] > target.t) {
+		target.max = mid;
+		return binarySearch(array, target);
+	}
 };
 
 // 39. Write a merge sort function.
 // mergeSort([34,7,23,32,5,62]) // [5,7,23,32,34,62]
 // https://www.khanacademy.org/computing/computer-science/algorithms/merge-sort/a/divide-and-conquer-algorithms
 var mergeSort = function(array) {
+	if (array.length <= 1) return array;
+	let mid = Math.floor(array.length / 2);
+	let l = mergeSort(array.slice(0, mid));
+	let r = mergeSort(array.slice(mid));
+	let combined = [];
+	while (l.length > 0 || r.length > 0) {
+		if (l.length === 0) {
+			combined = combined.concat(r);
+			r = [];
+			break;
+		} else if (r.length === 0) { 
+			combined = combined.concat(l);
+			l = [];
+			break;
+		} else if (l[0] < r[0]) {
+			combined.push(l.shift());
+		} else if (l[0] > r[0]) {
+			combined.push(r.shift());
+		}
+	}
+	return combined;
 };
 
 // 40. Deeply clone objects and arrays.
@@ -398,4 +432,11 @@ var mergeSort = function(array) {
 // console.log(obj2); // {a:1,b:{bb:{bbb:2}},c:3}
 // obj1 === obj2 // false
 var clone = function(input) {
+	let output = Array.isArray(input) ? [] : {};
+	let keys = Array.isArray(input) ? [...input.keys()] : Object.keys(input);
+	for (let i = 0; i < keys.length; i++) {
+		if (typeof input[keys[i]] === 'object') output[keys[i]] = clone(input[keys[i]]);
+		else output[keys[i]] = input[keys[i]];
+	}
+	return output;
 };
